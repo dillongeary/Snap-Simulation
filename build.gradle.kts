@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ajalt.clikt:clikt:4.2.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
 }
 
 
