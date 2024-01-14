@@ -14,7 +14,7 @@ Upon reaching a snap, the first player to call out "Snap!" wins the amount of ca
 
 Simply open up a terminal and run
 ```bash
-./Snap-Simulation
+java -jar Snap-Simulation-run.jar
 ``` 
 to run a basic game of snap, with 2 players, 1 deck of cards and snapping on matching ranks.
 
@@ -28,7 +28,7 @@ There are optional flags to alter the rules of the game, that can be entered whe
 
 For example, you can type in:
 ```bash
-./Snap-Simulation -p 3 -m strict -d 2
+java -jar Snap-Simulation-run.jar -p 3 -m strict -d 2
 ```
 for a game with 3 players, on strict rules with 2 decks of cards.
 
