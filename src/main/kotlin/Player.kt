@@ -4,9 +4,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import com.github.ajalt.clikt.core.CliktCommand
 
 
-fun compareRanks(newCard: Card, oldCard: Card) : Boolean {
-    return (newCard.rank == oldCard.rank)
-}
+
 
 interface CardPileListener {
     suspend fun onCardUpdate(topCards: MutableList<Card?>)
