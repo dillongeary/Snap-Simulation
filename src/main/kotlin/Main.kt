@@ -18,19 +18,23 @@ class Main : CliktCommand() {
     val numberOfDecks: Int by option("-d","--decks").int().restrictTo(1).default(1).help("The Number of Decks in Play")
 
     override fun run() {
-
+        //checks for valid program parameters
         if (gameMode == GameMode.Both && numberOfDecks == 1) {
             echo("Impossible to Snap! with only 1 deck on Strict Game Mode.\nExiting Game...")
             return
         }
 
+        //Initiates an instance of the cardPile class
         val cardPile = CardPile(numberOfPlayers)
+
+        //A list of the players
         val playerList : MutableList<Player> = mutableListOf()
 
+        //A list of the scores, where the index of the score is the player its for. Sets all the scores to 0
         val scoreBoard : MutableList<Int> = mutableListOf()
         repeat(numberOfPlayers) {scoreBoard.add(0)}
 
-        //Prints out how many points the winning player recieves, and prints out the score board
+        //Prints out how many points the winning player receives, and prints out the score board
         fun updateScore(player:Int, amount: Int) {
             echo("$amount ${if (amount == 1) {"card"} else {"cards"}} to Player ${player+1}")
             scoreBoard[player] += amount
@@ -49,8 +53,8 @@ class Main : CliktCommand() {
             }
         )
 
+        //multiplies the deck based on user specified amount
         var decks = singleDeck
-
         repeat(numberOfDecks - 1) {
             decks.addAll(singleDeck)
         }
@@ -122,12 +126,11 @@ class Main : CliktCommand() {
                 }
             }
 
-
-
+            /*
+            Code for printing the game over screen and the final score board.
+             */
             echo("Game Over!")
-
             delay(1.seconds)
-
             var bestScore: IndexedValue<Int>? = null
 
             echo("\nFinal Scores")

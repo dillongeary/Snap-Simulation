@@ -21,6 +21,7 @@ enum class Rank(val print: String) {
     King("K")
 }
 
+//a data class containing a cards suite and rank, and has variables for its name and icon.
 class Card (
     val suite: Suite,
     val rank: Rank

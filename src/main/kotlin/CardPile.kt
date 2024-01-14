@@ -2,7 +2,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-class CardPile (val numberOfPlayers:Int) {
+class CardPile (numberOfPlayers:Int) {
 
     //Lists of length N to store both the top card in play, and the amount of cards in each players stack, where N is the amount of players
     val topCards : MutableList<Card?> = mutableListOf()
