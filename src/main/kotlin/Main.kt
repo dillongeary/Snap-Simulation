@@ -3,15 +3,12 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlin.time.Duration.Companion.milliseconds
 
 class Main : CliktCommand() {
     val players: Int by option().int().default(2).help("Number of Players")
-
-
 
     override fun run() {
 
@@ -22,9 +19,12 @@ class Main : CliktCommand() {
         repeat(players) {scoreBoard.add(0)}
 
         fun updateScore(player:Int, amount: Int) {
-            echo("Player $player Called Snap First!")
+            echo("$amount ${if (amount == 1) {"card"} else {"cards"}} to Player ${player+1}")
             scoreBoard[player] += amount
-            echo(scoreBoard)
+            echo("\nScore Board")
+            for (score in scoreBoard.withIndex()) {
+                echo("Player ${score.index+1} : ${score.value} ${if (score.value == 1) {"card"} else {"cards"}}")
+            }
         }
 
         //Create an array list of cards by performing cartesian product between all suites and card ranks, and returning each pair as a card object.
@@ -70,18 +70,29 @@ class Main : CliktCommand() {
         Wait 1 second, then check to see if anyone has called snap via the getAndResetQuickestPlayer.
         Update and print the score if changed.
          */
-        while (true) {
+        var onePlayerWithCards = true
+        while (onePlayerWithCards) {
+            onePlayerWithCards = false
             for (player in playerList) {
-                runBlocking {
-                    val nextCard = player.getNextCard()
-                    echo("Player ${player.name} : ${nextCard.name}")
-                    cardPile.updateCard(player.name,nextCard)
-                    delay(1000.milliseconds)
-                    val result = cardPile.getAndResetQuickestPlayer()
-                    result?.let { (quickestPlayer, score) -> updateScore(quickestPlayer,score) }
+                onePlayerWithCards = true
+                if (player.myDeck.size > 0) {
+                    runBlocking {
+                        val nextCard = player.getNextCard()
+                        cardPile.updateCard(player.name, nextCard)
+                        echo("Player ${player.name+1} plays ${nextCard.name}\n${cardPile.topCards.map { if (it == null) {"[     ]"} else {it.icon}}.joinToString(" ")}\n")
+                        cardPile.updateObservers()
+                        delay(700.milliseconds)
+                        val result = cardPile.getAndResetQuickestPlayer()
+                        result?.let {
+                            (quickestPlayer, score) -> updateScore(quickestPlayer, score)
+                            delay(3000.milliseconds)
+                            echo()
+                        }
+                    }
                 }
             }
         }
+
 
 
     }

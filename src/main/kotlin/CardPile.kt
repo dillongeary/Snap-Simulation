@@ -46,10 +46,13 @@ class CardPile (val numberOfPlayers:Int) {
         observers.add(player)
     }
 
-    suspend fun updateCard(player: Int, newCard: Card) {
+    fun updateCard(player: Int, newCard: Card) {
         //println("updating card : ${topCards}")
         topCards[player] = newCard
         amountOfCards[player] += 1
+    }
+
+    suspend fun updateObservers() {
         coroutineScope {
             observers.forEach {
                 launch { it.onCardUpdate(topCards) }

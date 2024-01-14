@@ -1,6 +1,8 @@
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
+import com.github.ajalt.clikt.core.CliktCommand
+
 
 fun compareRanks(newCard: Card, oldCard: Card) : Boolean {
     return (newCard.rank == oldCard.rank)
@@ -37,7 +39,7 @@ class Player(
         delay(delay.milliseconds)
 
         checkForMatchingCards(topCards)?.let {(cardA,cardB) ->
-            println("Player $name : Snap!")
+            println("Player ${name+1} : Snap!")
             cardPile.snap(name,cardA,cardB)
         }
     }
