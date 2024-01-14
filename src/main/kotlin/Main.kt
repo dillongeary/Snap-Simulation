@@ -5,10 +5,11 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.restrictTo
+import com.github.ajalt.clikt.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlin.time.Duration.Companion.milliseconds
-
+import kotlin.time.Duration.Companion.seconds
 
 
 class Main : CliktCommand() {
@@ -90,30 +91,69 @@ class Main : CliktCommand() {
         Update and print the score if changed.
          */
         var ifPlayersHaveCards = true
-        while (ifPlayersHaveCards) {
-            ifPlayersHaveCards = false
-            for (player in playerList) {
-                if (player.myDeck.size > 0) {
-                    ifPlayersHaveCards = true
-                    runBlocking {
+        runBlocking {
+            while (ifPlayersHaveCards) {
+                ifPlayersHaveCards = false
+                for (player in playerList) {
+                    if (player.myDeck.size > 0) {
+                        ifPlayersHaveCards = true
                         val nextCard = player.getNextCard()
                         cardPile.updateCardPiles(player.name, nextCard)
-                        echo("Player ${player.name+1} plays ${nextCard.name}\n${cardPile.topCards.map { if (it == null) {"[     ]"} else {it.icon}}.joinToString(" ")}\n")
+                        echo(
+                            "Player ${player.name + 1} plays ${nextCard.name}\n${
+                                cardPile.topCards.map {
+                                    if (it == null) {
+                                        "[       ]"
+                                    } else {
+                                        it.icon
+                                    }
+                                }.joinToString(" ")
+                            }\n"
+                        )
                         cardPile.updateObservers()
                         delay(700.milliseconds)
                         val result = cardPile.getAndResetQuickestPlayer()
-                        result?.let {
-                            (quickestPlayer, score) -> updateScore(quickestPlayer, score)
+                        result?.let { (quickestPlayer, score) ->
+                            updateScore(quickestPlayer, score)
                             delay(3000.milliseconds)
                             echo()
                         }
                     }
                 }
             }
+
+
+
+            echo("Game Over!")
+
+            delay(1.seconds)
+
+            var bestScore: IndexedValue<Int>? = null
+
+            echo("\nFinal Scores")
+            for (score in scoreBoard.withIndex()) {
+                echo(
+                    "Player ${score.index + 1} : ${score.value} ${
+                        if (score.value == 1) {
+                            "card"
+                        } else {
+                            "cards"
+                        }
+                    }"
+                )
+                if (bestScore != null) {
+                    if (score.value > bestScore.value) {
+                        bestScore = score
+                    }
+                } else {
+                    bestScore = score
+                }
+            }
+            delay(1.seconds)
+
+            echo("\nPlayer ${bestScore?.index?.plus(1)} Won!")
+
         }
-
-
-
     }
 }
 

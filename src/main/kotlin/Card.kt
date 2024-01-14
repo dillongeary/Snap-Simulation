@@ -1,8 +1,8 @@
 enum class Suite (val print: String){
-    Hearts("♥"),
-    Spades("♠"),
-    Diamonds("♦"),
-    Clubs("♣")
+    Hearts("Hrt"),
+    Spades("Spd"),
+    Diamonds("Dmd"),
+    Clubs("Clb")
 }
 
 enum class Rank(val print: String) {
